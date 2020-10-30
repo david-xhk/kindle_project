@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-<div>
+<div class = 'title_image'>
     <h2>{{ title }}</h2>
     <img src="{{ imUrl }}" alt="{{ title }}" />
-    <br>
+</div>
+<div class = 'description_asin'></div>
     <h2>Description</h2>
     <p>{{ description }}</p>
     <p><b>ASIN:</b> {{ asin }}</p>
