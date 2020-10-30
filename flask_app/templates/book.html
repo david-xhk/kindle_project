@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+    <h2>{{ title }}</h2>
+    <img src="{{ imUrl }}" alt="{{ title }}" />
+    <br>
+    <h2>Description</h2>
+    <p>{{ description }}</p>
+    <p><b>ASIN:</b> {{ asin }}</p>
+</div>
+
+{% if buy_after_viewing %}
+<div>
+People also bought:
+    <ul>
+    {% for asin in buy_after_viewing %}
+        <li><a href="{{ url_for('get_book', asin=asin) }}">
+        {{ asin }}
+        </a></li>
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endblock %}
