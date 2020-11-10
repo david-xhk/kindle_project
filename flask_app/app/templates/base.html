@@ -5,13 +5,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
         <style type="text/css">
-            body{
+            body {
                 font-family: Arial, Helvetica, sans-serif;
             }
             h2 {
                 color: maroon;
             }
-            .navbar{
+            .navbar {
                 background-color: lightgray;
                 overflow: hidden;
             }
@@ -27,25 +27,22 @@
                 background-color: black;
                 color: white;
             }
-
+            #book_content {
+                display: flex;
+            }
             #book_info {
                 height: auto;
                 width: auto;
-                position: absolute;
-                left: 400px;
+                /* position: absolute;
+                left: 450px;
                 top: 140px;
-                margin-right: 30px;
+                margin-right: 30px; */
             }
 
         </style>
     </head>
     <body>
-        <div class="navbar">
-            <a href="/random/book">Next>></a>
-        </div>  
-        <div class="container">
-            {% block content %}{% endblock %}
-        </div>
+        {% block content %}{% endblock %}
         <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
         <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
     </body>
