@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="navbar"></div>
+<div class="container">
+    <a href="{{ url_for('get_book', asin=asin) }}"><h2>{{ title }}</h2></a>
+    <h3><q><i>{{ summary }}</i></q></h3>
+    <div id="review_content">
+        <div>
+            <p><b>Rating:</b> {{ rating }}</p>
+            <p>{{ helpfulness }} found this book helpful.</p>
+        </div>
+        <div>
+            <p>{{ reviewText }}</p>
+            <p>Reviewed by {{ reviewer }} on {{ timestamp }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

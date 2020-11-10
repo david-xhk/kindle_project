@@ -24,14 +24,14 @@ def random_book():
 def get_review(reviewId):
     review = None
     return render_template("review.html",
-        asin = None,
-        title = None,
-        helpfulness = None,
-        rating = None,
-        reviewText = None,
-        reviewer = None,
-        summary = None,
-        timestamp = None)
+        asin = "B005G6CD5I",
+        title = "Morning Rituals - How We Awaken",
+        helpfulness = "0 out of 0",
+        rating = "5 out of 5",
+        reviewText = "This is the review text!I truly enjoyed this book. I felt so spiritual while reading this book. When I picked up this book, I never thought it would be so interesting. Loved it!! Would totally recommend it. ",
+        reviewer = "Jisamariam",
+        summary = "Best book ever!",
+        timestamp = "October 11, 2013")
 
 @app.route("/book/<asin>")
 def get_book(asin):
