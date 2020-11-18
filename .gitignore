@@ -1,2 +1,4 @@
 *.pyc
 .vscode
+ec2-key.pem
+.gitignore

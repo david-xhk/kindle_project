@@ -1,70 +1,47 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="navbar">
-    <a href="{{ url_for('random_book') }}">Next>></a>
-</div>
-<div class="container">
-    <h2>{{ title }}</h2>
-    <div id="book_content">
-        <div>
-            <img src="{{ imUrl }}" alt="{{ title }}" width=300 height=300/>
-            <hr>
-            <p><b>Price:</b> {{ price }}</p>
-            <p><b>Sales Rank:</b> {{ salesRank }}</p>
-        </div>
-        <div>
-            <h3>Description</h3>
-            <p>{{ description }}</p>
-            <p><b>ASIN:</b> {{ asin }}</p>
-            {% if reviews %}
-            <div>
-                Reviews:
-                <ul>
-                {% for reviewId, summary in reviews %}
-                    <li><a href="{{ url_for('get_review', reviewId=reviewId) }}">
-                    "{{ summary }}"
-                    </a></li>
-                {% endfor %}
-                </ul>
-            </div>
-            {% endif %}
-            {% if related %}
-            <div>
-                {% if related.buy_after_viewing -%}
-                Buy after viewing:
-                <ul>
-                {% for asin, title in related.buy_after_viewing %}
-                    <li><a href="{{ url_for('get_book', asin=asin) }}">
-                    {{ title }}
-                    </a></li>
-                {% endfor %}
-                </ul>
-                {% endif %}
-        
-                {% if related.also_bought -%}
-                People also bought:
-                <ul>
-                {% for asin, title in related.also_bought %}
-                    <li><a href="{{ url_for('get_book', asin=asin) }}">
-                    {{ title }}
-                    </a></li>
-                {% endfor %}
-                </ul>
-                {% endif %}
-        
-                {% if related.also_viewed -%}
-                People also viewed:
-                <ul>
-                {% for asin, title in related.also_viewed %}
-                    <li><a href="{{ url_for('get_book', asin=asin) }}">
-                    {{ title }}
-                    </a></li>
-                {% endfor %}
-                </ul>
-                {% endif %}
-            </div>
-            {% endif %}
-        </div>
-    </div>
-</div>
+{% extends "book_base.html" %}
+{% block book_content %}
+<h3>Description</h3>
+<p>{{ description }}</p>
+
+{% if reviews %}
+<b>Reviews:</b>
+<ul>
+{% for reviewId, summary in reviews %}
+    <li><a href="{{ url_for('get_book', asin=asin) }}">"{{ summary }}"</a></li>
+{% endfor %}
+</ul>
+{% else %}
+<p>See <a href="{{ url_for('get_book', asin=asin, include=request.args.getlist('include')+['reviews']) }}">reviews</a></p>
+{% endif %}
+
+{% if related %}
+{% if related.buy_after_viewing -%}
+<b>Buy after viewing:</b>
+<ul>
+{% for asin, title in related.buy_after_viewing %}
+    <li><a href="{{ url_for('get_book', asin=asin) }}">{{ title }}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% if related.also_bought -%}
+<b>People also bought:</b>
+<ul>
+{% for asin, title in related.also_bought %}
+    <li><a href="{{ url_for('get_book', asin=asin) }}">{{ title }}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% if related.also_viewed -%}
+<b>People also viewed:</b>
+<ul>
+{% for asin, title in related.also_viewed %}
+    <li><a href="{{ url_for('get_book', asin=asin) }}">{{ title }}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+{% else %}
+<p>See <a href="{{ url_for('get_book', asin=asin, include=request.args.getlist('include')+['related']) }}">related</a></p>
+{% endif %}
 {% endblock %}

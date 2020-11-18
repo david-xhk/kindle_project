@@ -1,19 +1,10 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="navbar">
-    <a href="{{ url_for('random_review') }}">Next>></a>
-</div>
-<div class="container">
-    <h2>
-        <a href="{{ url_for('get_book', asin=asin) }}">{{ title }}</a>
-    </h2>
-    <h3>
-        <i>"{{ summary }}"</i>
-    </h3>
-    <p>{{ reviewText }}</p>
-    <p><b>Rating:</b> {{ rating }}</p>
-    <p><i>Reviewed by {{ reviewer }} on {{ timestamp }}</i></p>
-    <hr>
-    <p>{{ helpfulness }} found this review helpful.</p>
-</div>
+{% extends "book_base.html" %}
+{% block book_content %}
+<h3><i>"{{ summary }}"</i></h3>
+<p>{{ reviewText }}</p>
+<p><b>Rating:</b> {{ rating }}</p>
+<p><i>Reviewed by {{ reviewer }} on {{ timestamp }}</i></p>
+{% if helpfulness %}
+<p><b>{{ helpfulness[0] }}</b> out of <b>{{ helpfulness[1] }}</b> found this review helpful.</p>
+{% endif %}
 {% endblock %}
