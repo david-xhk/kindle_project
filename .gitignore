@@ -3,4 +3,3 @@
 ipv4.conf
 ec2-key.pem
 production_server/root
-.gitignore
