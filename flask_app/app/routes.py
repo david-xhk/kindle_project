@@ -28,9 +28,9 @@ def find_book(asin, include_related=False, include_reviews=False):
     book["categories"] = result.get("categories") or []
     book["categories"] = convert_flat_to_hierarchical(book["categories"])
     book["price"] = result.get("price")
-    book["price"] = f"${book['price']:.2f}" if book["price"] is not None else "Price not available"
+    book["price"] = "${:.2f}".format(book['price']) if book["price"] is not None else "Price not available"
     book["salesRank"] = result.get("salesRank")
-    book["salesRank"] = f"{book['salesRank']:,}" if book["salesRank"] is not None else "Sales rank not available"
+    book["salesRank"] = "{:,}".format(book['salesRank']) if book["salesRank"] is not None else "Sales rank not available"
     if include_related:
         book["related"] = result.get("related") or {}
         for key in book["related"]:
@@ -47,7 +47,7 @@ def find_review(reviewId):
     review = find_book(asin) or {}
     review["helpfulness"] = helpful[1:-1].split(", ")
     review["helpfulness"] = review["helpfulness"] if int(review["helpfulness"][1]) > 0 else None
-    review["rating"] = f"{overall} / 5"
+    review["rating"] = "{} / 5".format(overall)
     review["reviewText"] = reviewText
     review["reviewer"] = reviewerName
     review["summary"] = summary

@@ -5,7 +5,7 @@ def timeit(func):
         start = time.time()
         result = func(*args, **kwargs)
         stop = time.time()
-        print("time taken: %ss" % (stop-start))
+        print("time taken: {}s".format(stop-start))
         return result
     return wrapped
 

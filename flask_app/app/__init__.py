@@ -3,7 +3,7 @@ from .config import Config
 from flask_pymongo import PyMongo
 from flask_mysqldb import MySQL
 
-__version__ = 1.0
+__version__ = 1.1
 
 app = Flask(__name__)
 app.config.from_object(Config)
