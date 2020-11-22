@@ -3,15 +3,17 @@ export mysql_server=;                # IP address of MySQL server
 export mongodb_server=;              # IP address of MongoDB server
 export flask_server=;                # IP address of Flask server
 
-export PROD_IP=$production_server;
-export FLASK_IP=$flask_app;
 export DEV_IP=;                      # IP address(es) of developer
 export DEV_PASSWORD=;                # Password for developer
+
+export PROD_IP=$production_server;
 
 export MYSQL_HOST=$mysql_server;
 export MYSQL_BIND_ADDR=;             # Bind address of MySQL server
 export MYSQL_PORT=3306;
 export MYSQL_DB=;                    # Name of MySQL database
+export MYSQL_TABLE=;                 # Name of MySQL database table
+export MYSQL_FILE=;                  # Name of MySQL source file
 export MYSQL_USER=;                  # Name of MySQL user
 export MYSQL_USER_ADDR=$FLASK_IP;
 export MYSQL_PASSWORD=;              # Password for MySQL user
@@ -21,8 +23,13 @@ export MONGO_HOST=$mongodb_server;
 export MONGO_BIND_ADDR=;             # Bind address of MongoDB server
 export MONGO_PORT=27017;
 export MONGO_DB=;                    # Name of MongoDB database
+export MONGO_COLLECTION=;            # Name of MongoDB database collection
+export MONGO_FILE=;                  # Name of MongoDB source file
 export MONGO_USER=;                  # Name of MongoDB user
 export MONGO_PASSWORD=;              # Password for MongoDB user
 export MONGO_ROOT_PASS=;             # Password for MongoDB root
+
+export FLASK_IP=$flask_server;
+export FLASK_FILE=flask_server.zip;
 
 export CONFIG_DONE=1;
