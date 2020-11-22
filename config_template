@@ -1,33 +1,33 @@
-export production_server=;              # IP address of production server
-export mysql_server=;                   # IP address of MySQL server
-export mongodb_server=;                 # IP address of MongoDB server
-export flask_server=;                   # IP address of Flask server
+export production_server=;
+export mysql_server=;
+export mongodb_server=;
+export flask_server=;
 
-export DEV_ADDRESS=;                    # IP address(es) of developer
-export DEV_PASSWORD=;                   # Password for developer
+export DEV_ADDRESS=;
+export DEV_PASSWORD=;
 export DEV_KEY_FILE=;
 
 export PRODUCTION_HOST=$production_server;
 export FLASK_HOST=$flask_server;
-export FLASK_SOURCE=;                   # Name of Flask source file
+export FLASK_SOURCE=;
 
 export MYSQL_HOST=$mysql_server;
-export MYSQL_BIND_ADDRESS=;             # Bind address of MySQL server
+export MYSQL_BIND_ADDRESS=;
 export MYSQL_PORT=3306;
-export MYSQL_DB=;                       # Name of MySQL database
-export MYSQL_TABLE=;                    # Name of MySQL database table
-export MYSQL_SOURCE=;                   # Name of MySQL source file
-export MYSQL_USER=;                     # Name of MySQL user
+export MYSQL_DB=;
+export MYSQL_TABLE=;
+export MYSQL_SOURCE=;
+export MYSQL_USER=;
 export MYSQL_USER_ADDRESS=$FLASK_HOST;
-export MYSQL_PASSWORD=;                 # Password for MySQL user
-export MYSQL_ROOT_PASSWORD=;            # Password for MySQL root
+export MYSQL_PASSWORD=;
+export MYSQL_ROOT_PASSWORD=;
 
 export MONGO_HOST=$mongodb_server;
-export MONGO_BIND_ADDRESS=;             # Bind address of MongoDB server
+export MONGO_BIND_ADDRESS=;
 export MONGO_PORT=27017;
-export MONGO_DB=;                       # Name of MongoDB database
-export MONGO_COLLECTION=;               # Name of MongoDB database collection
-export MONGO_SOURCE=;                   # Name of MongoDB source file
-export MONGO_USER=;                     # Name of MongoDB user
-export MONGO_PASSWORD=;                 # Password for MongoDB user
-export MONGO_ROOT_PASSWORD=;            # Password for MongoDB root
+export MONGO_DB=;
+export MONGO_COLLECTION=;
+export MONGO_SOURCE=;
+export MONGO_USER=;
+export MONGO_PASSWORD=;
+export MONGO_ROOT_PASSWORD=;
