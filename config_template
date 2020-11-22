@@ -9,10 +9,10 @@ export DEV_KEY_FILE=;
 
 export PRODUCTION_HOST=$production_server;
 export FLASK_HOST=$flask_server;
-export FLASK_SOURCE=;
+export FLASK_SOURCE=flask_server.zip;
 
 export MYSQL_HOST=$mysql_server;
-export MYSQL_BIND_ADDRESS=;
+export MYSQL_BIND_ADDRESS=0.0.0.0;
 export MYSQL_PORT=3306;
 export MYSQL_DB=;
 export MYSQL_TABLE=;
@@ -23,7 +23,7 @@ export MYSQL_PASSWORD=;
 export MYSQL_ROOT_PASSWORD=;
 
 export MONGO_HOST=$mongodb_server;
-export MONGO_BIND_ADDRESS=;
+export MONGO_BIND_ADDRESS=0.0.0.0;
 export MONGO_PORT=27017;
 export MONGO_DB=;
 export MONGO_COLLECTION=;
