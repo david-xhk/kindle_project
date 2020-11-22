@@ -3,10 +3,9 @@ from app.util import convert_flat_to_hierarchical
 import datetime
 import random
 
-MYSQL_DB = app.config["MYSQL_DB"]
-
 def mongo_query(*args, **kwargs):
-    return mongo.db.kindle_metadata.find(*args, **kwargs)
+    collection = app.config["MONGO_COLLECTION"]
+    return mongo.db[collection].find(*args, **kwargs)
 
 def sql_query(*args, **kwargs):
     cursor = mysql.connection.cursor()
@@ -15,7 +14,7 @@ def sql_query(*args, **kwargs):
     return result
 
 def find_review(reviewId):
-    result = sql_query("""SELECT * FROM {}.kindle_reviews WHERE reviewId = %s""".format(MYSQL_DB), (reviewId,))
+    result = sql_query("""SELECT * FROM {MYSQL_DB}.{MYSQL_TABLE} WHERE reviewId = %s""".format(**app.config), (reviewId,))
     if len(result) == 0:
         return None
     reviewId, asin, helpful, overall, reviewText, reviewTime, reviewerID, reviewerName, summary, unixReviewTime = result[0]
@@ -49,7 +48,7 @@ def find_book(asin, lenient=False):
     book["related"] = result.get("related") or {}
     for key in book["related"]:
         book["related"][key] = get_titles(book["related"][key])
-    book["reviews"] = sql_query("""SELECT reviewId, summary FROM {}.kindle_reviews WHERE asin = %s""".format(MYSQL_DB), (asin,))
+    book["reviews"] = sql_query("""SELECT reviewId, summary FROM {MYSQL_DB}.{MYSQL_TABLE} WHERE asin = %s""".format(**app.config), (asin,))
     return book
 
 def get_titles(asins):
@@ -62,7 +61,7 @@ def get_titles(asins):
         return [(book["asin"], book.get("title") or book["asin"]) for book in result]
 
 def random_reviewId():
-    count = sql_query("""SELECT MAX(reviewId) as maxId FROM {}.kindle_reviews""".format(MYSQL_DB))[0][0]
+    count = sql_query("""SELECT MAX(reviewId) as maxId FROM {MYSQL_DB}.{MYSQL_TABLE}""".format(**app.config))[0][0]
     return random.randint(0, count)
 
 def random_asin():
