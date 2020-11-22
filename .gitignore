@@ -1,5 +1,5 @@
 *.pyc
 .vscode
-ipv4.conf
+config
 ec2-key.pem
 production_server/root
