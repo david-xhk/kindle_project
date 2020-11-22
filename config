@@ -30,5 +30,3 @@ export MONGO_FILE=;                  # Name of MongoDB source file
 export MONGO_USER=;                  # Name of MongoDB user
 export MONGO_PASSWORD=;              # Password for MongoDB user
 export MONGO_ROOT_PASS=;             # Password for MongoDB root
-
-export CONFIG_DONE=1;
