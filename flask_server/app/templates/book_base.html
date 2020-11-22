@@ -1,14 +1,13 @@
 {% extends "base.html" %}
 {%- macro recurse(node) -%}
-<li>
-  {{- node.name }}
-  {%- if (node.children.values() | length) > 0 %}
+<li>{{ node.name }}
+{%- if (node.children.values() | length) > 0 %}
   <ul>
     {%- for child in node.children.values() %}
     {{ recurse(child) | indent(4) -}}
     {%- endfor %}
   </ul>
-  {% endif -%}
+{% endif -%}
 </li>
 {%- endmacro -%}
 {% block content -%}
@@ -33,7 +32,7 @@
         <b>Categories:</b>
         <ul>
           {%- for category in categories.children.values() %}
-          {{ recurse(category) | indent(6) -}}
+          {{ recurse(category) | indent(10) -}}
           {%- endfor %}
         </ul>
         {%- endif %}
