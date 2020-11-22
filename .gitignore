@@ -1,7 +1,6 @@
 *.pyc
 .vscode
 config
-ec2-key.pem
 !production_server/root/
 production_server/root/*
 !production_server/root/flask_server.zip
