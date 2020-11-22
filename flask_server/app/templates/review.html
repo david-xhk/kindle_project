@@ -1,0 +1,14 @@
+{% extends "book_base.html" %}
+{% block content_right -%}
+<div id="review">
+  <h3><i>"{{ summary }}"</i></h3>
+  <p>{{ reviewText }}</p>
+</div>
+<div id="review-info">
+  <p><b>Rating:</b> {{ rating }}</p>
+  <p><i>Reviewed by {{ reviewer }} on {{ timestamp }}</i></p>
+  {%- if helpfulness %}
+  <p><b>{{ helpfulness[0] }}</b> out of <b>{{ helpfulness[1] }}</b> found this review helpful.</p>
+  {%- endif %}
+</div>
+{%- endblock %}

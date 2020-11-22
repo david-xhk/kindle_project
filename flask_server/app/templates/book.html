@@ -1,0 +1,53 @@
+{% extends "book_base.html" %}
+{% block content_right -%}
+<div id="book-description">
+  <h2>Description</h2>
+  <p>{{ description }}</p>
+</div>
+<div id="book-reviews">
+  <h3>Reviews</h3>
+  {%- if not reviews %}
+  <p>No reviews</p>
+  {%- else %}
+  <ul>
+    {%- for reviewId, summary in reviews %}
+    <li><a href="{{ url_for('get_review', reviewId=reviewId) }}">"{{ summary }}"</a></li>
+    {%- endfor %}
+  </ul>
+  {%- endif %}
+</div>
+<div id="book-related">
+  <h3>Related</h3>
+  {%- set related_count = 0 -%}
+  {%- if related.buy_after_viewing %}
+  Buy after viewing:
+  <ul>
+    {%- for asin, title in related.buy_after_viewing %}
+    <li><a href="{{ url_for('get_book', asin=asin) }}">{{ title }}</a></li>
+    {%- endfor %}
+  </ul>
+  {%- set related_count = related_count + 1 -%}
+  {%- endif %}
+  {%- if related.also_bought %}
+  People also bought:
+  <ul>
+    {%- for asin, title in related.also_bought %}
+    <li><a href="{{ url_for('get_book', asin=asin) }}">{{ title }}</a></li>
+    {%- endfor %}
+  </ul>
+  {%- set related_count = related_count + 1 -%}
+  {%- endif %}
+  {%- if related.also_viewed %}
+  People also viewed:
+  <ul>
+    {%- for asin, title in related.also_viewed %}
+    <li><a href="{{ url_for('get_book', asin=asin) }}">{{ title }}</a></li>
+    {%- endfor %}
+  </ul>
+  {%- set related_count = related_count + 1 -%}
+  {%- endif %}
+  {%- if related_count == 0 %}
+  <p>No related eBooks</p>
+  {%- endif %}
+</div>
+{%- endblock %}
