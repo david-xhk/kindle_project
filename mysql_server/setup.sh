@@ -1,9 +1,11 @@
 #!/bin/bash
 
+echo "Setting up MySQL server..."
+
 # Install MySQL
 echo "Installing MySQL..."
-sudo apt-get -q update
-sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y install mysql-server # DEBIAN_FRONTEND noninteractive is to skip setting root password
+sudo apt-get update -qq >/dev/null
+sudo DEBIAN_FRONTEND=noninteractive apt-get install mysql-server -qq >/dev/null
 echo "Installed MySQL"
 
 # Start MySQL service
@@ -13,15 +15,14 @@ echo "Started MySQL service"
 
 # Wait for MySQL service to be ready to accept connections
 echo "Waiting for MySQL service to be ready..."
-until sudo mysql -e status
+until mysqladmin ping
 do
-    echo .
     sleep 1
 done
 echo "MySQL service is ready"
 
-# Change root password
-echo "Changing root password..."
+# Change MySQL root password
+echo "Changing MySQL root password..."
 if [ -z "$MYSQL_ROOT_PASS" ]
 then
     echo "Enter MySQL root password:"
@@ -31,24 +32,26 @@ read -d '' cmd << EOF
 alter user 'root'@'localhost' identified with mysql_native_password by '$MYSQL_ROOT_PASS';
 flush privileges;
 EOF
-echo "$cmd"
-sudo mysql -e "$cmd"
-echo "Changed root password"
+echo "Executing MySQL command:"
+echo "$cmd" | sed 's/^/  /'
+echo "$cmd" | sudo mysql
+echo "Changed MySQL root password"
 
-# Create database
-echo "Creating database..."
+# Create MySQL database
+echo "Creating MySQL database..."
 if [ -z "$MYSQL_DB" ]
 then
     echo "Enter MySQL database name:"
     read MYSQL_DB
 fi
 cmd="create database $MYSQL_DB;"
-echo "$cmd"
-mysql -u root -h localhost -p$MYSQL_ROOT_PASS -e "$cmd"
-echo "Created database"
+echo "Executing MySQL command:"
+echo "$cmd" | sed 's/^/  /'
+echo "$cmd" | mysql -u root -h localhost -p$MYSQL_ROOT_PASS 2>&1 | grep -v "insecure"
+echo "Created MySQL database"
 
-# Create users
-echo "Creating users..."
+# Create MySQL database users
+echo "Creating MySQL database users..."
 if [ -z "$MYSQL_USER" ]
 then
     echo "Enter name of MySQL database user:"
@@ -76,34 +79,46 @@ then
 fi
 cmd=("create user '$MYSQL_USER'@'$MYSQL_USER_ADDR' identified by '$MYSQL_PASSWORD';"
      "grant all on $MYSQL_DB.* to '$MYSQL_USER'@'$MYSQL_USER_ADDR';")
-for IP in $DEV_IP; do
+for IP in $DEV_IP
+do
     cmd+=("create user 'dev'@'$IP' identified by '$DEV_PASSWORD';"
           "grant all on \`%\`.* to 'dev'@'$IP';")
 done
 cmd+=("flush privileges;")
 IFS=$'\n'; cmd="${cmd[*]}"
-echo "$cmd"
-mysql -u root -h localhost -p$MYSQL_ROOT_PASS -e "$cmd"
-echo "Created users"
+echo "Executing MySQL command:"
+echo "$cmd" | sed 's/^/  /'
+echo "$cmd" | mysql -u root -h localhost -p$MYSQL_ROOT_PASS 2>&1 | grep -v "insecure"
+echo "Created MySQL database users"
 
-# Download kindle_reviews.csv
-echo "Downloading kindle_reviews.csv..."
+# Download MySQL database source file
+echo "Downloading MySQL database source file..."
 if [ -z "$PROD_IP" ]
 then
     echo "Enter IP address of production server:"
     read PROD_IP
 fi
-wget -q "$PROD_IP/kindle_reviews.csv"
-echo "Downloaded kindle_reviews.csv"
+if [ -z "$MYSQL_FILE" ]
+then
+    echo "Enter name of MySQL database source file:"
+    read MYSQL_FILE
+fi
+wget -q "$PROD_IP/$MYSQL_FILE"
+echo "Downloaded MySQL database source file"
 
-# Load kindle_reviews.csv
-echo "Loading kindle_reviews.csv..."
+# Load MySQL database source file
+echo "Loading MySQL database source file..."
+if [ -z "$MYSQL_TABLE" ]
+then
+    echo "Enter name of MySQL database table:"
+    read MYSQL_TABLE
+fi
 read -d '' cmd << EOF
 use $MYSQL_DB;
 
-drop table if exists kindle_reviews;
+drop table if exists $MYSQL_TABLE;
 
-create table kindle_reviews
+create table $MYSQL_TABLE
 (
     reviewId int primary key,
     asin varchar(10),
@@ -117,7 +132,7 @@ create table kindle_reviews
     unixReviewTime int(11)
 );
 
-load data local infile 'kindle_reviews.csv' into table kindle_reviews
+load data local infile '$MYSQL_FILE' into table $MYSQL_TABLE
 fields terminated by ','
 optionally enclosed by '"'
 escaped by '"'
@@ -125,19 +140,22 @@ lines terminated by '\\\r\\\n'
 ignore 1 rows
 (reviewId, asin, helpful, overall, reviewText, reviewTime, reviewerID, reviewerName, summary, unixReviewTime);
 EOF
-echo "$cmd"
-mysql -h localhost -u root -p$MYSQL_ROOT_PASS -e "$cmd"
-rm kindle_reviews.csv
-echo "Loaded kindle_reviews.csv"
+echo "Executing MySQL command:"
+echo "$cmd" | sed 's/^/  /'
+echo "$cmd" | mysql -u root -h localhost -p$MYSQL_ROOT_PASS 2>&1 | grep -v "insecure"
+rm $MYSQL_FILE
+echo "Loaded MySQL database source file"
 
 # Create indexes
 echo "Creating indexes..."
 read -d '' cmd << EOF
 use $MYSQL_DB;
-create index reviewId on kindle_reviews (reviewId);
-create index asin on kindle_reviews (asin);
+create index reviewId on $MYSQL_TABLE (reviewId);
+create index asin on $MYSQL_TABLE (asin);
 EOF
-mysql -h localhost -u root -p$MYSQL_ROOT_PASS -e "$cmd"
+echo "Executing MySQL command:"
+echo "$cmd" | sed 's/^/  /'
+echo "$cmd" | mysql -u root -h localhost -p$MYSQL_ROOT_PASS 2>&1 | grep -v "insecure"
 echo "Created indexes"
 
 # Configure MySQL
@@ -148,16 +166,19 @@ then
     read MYSQL_BIND_ADDR
 fi
 # Append configuration for bind address
-sudo tee -a /etc/mysql/my.cnf << EOF
+sudo tee -a /etc/mysql/my.cnf << EOF >/dev/null 
 
 [mysqld]
 bind-address=$MYSQL_BIND_ADDR
 EOF
 # Print my.cnf for verification
-cat /etc/mysql/my.cnf
+echo "MySQL config file:"
+cat /etc/mysql/my.cnf | sed 's/^/  /'
 echo "Configured MySQL"
 
 # Restart MySQL service
 echo "Restarting MySQL service..."
 sudo service mysql restart
 echo "Restarted MySQL service"
+
+echo "Finished setting up MySQL server"

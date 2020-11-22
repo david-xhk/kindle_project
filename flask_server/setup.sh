@@ -1,30 +1,42 @@
 #!/bin/bash
 
-# Install dependencies
-echo "Installing dependencies..."
-sudo apt-get -q update
-sudo apt-get -q -y install python3-pip unzip libmysqlclient-dev
-echo "Installed dependencies"
+echo "Setting up Flask server..."
 
-# Download flask_server.zip
-echo "Downloading flask_server.zip..."
+# Install Flask dependencies
+echo "Installing Flask dependencies..."
+sudo apt-get update -qq >/dev/null
+sudo DEBIAN_FRONTEND=noninteractive apt-get install python3-pip unzip libmysqlclient-dev -qq >/dev/null
+echo "Installed Flask dependencies"
+
+# Download Flask server source file
+echo "Downloading Flask source file..."
 if [ -z "$PROD_IP" ]
 then
     echo "Enter IP address of production server:"
     read PROD_IP
 fi
-wget -q "$PROD_IP/flask_server.zip"
-echo "Downloaded flask_server.zip"
+if [ -z "$FLASK_FILE" ]
+then
+    echo "Enter name of Flask server source file:"
+    read FLASK_FILE
+fi
+wget -q "$PROD_IP/$FLASK_FILE"
+echo "Downloaded Flask server source file"
 
-# Installing flask_server
-echo "Installing flask_server..."
-unzip flask_server.zip
-chmod u+x flask_server/*.sh
-mv flask_server/* .
-rm -r flask_server flask_server.zip setup.sh
-echo "Installed flask_server"
+# Installing Flask server source file
+echo "Installing Flask server source file..."
+unzip -q $FLASK_FILE -d temp
+mv temp/*/* .
+rm -r temp $FLASK_FILE setup.sh
+chmod u+x *.sh
+echo "Installed Flask server source file"
 
-# Install requirements
-echo "Installing requirements..."
+# Install more Flask dependencies
+echo "Installing more Flask dependencies..."
 pip3 install -q -r requirements.txt
-echo "Installed requirements"
+echo "Installed more Flask dependencies"
+
+echo "Finished setting up Flask server"
+
+# Start Flask server
+./start.sh

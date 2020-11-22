@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Start the flask server
-echo "Starting flask server..."
+# Start the Flask server
+echo "Starting Flask server..."
 if [ -z "$MYSQL_HOST" ]
 then
     echo "Enter MySQL host address:"
@@ -52,6 +52,7 @@ then
     echo "Enter password for MongoDB database user:"
     read -s MONGO_PASSWORD
 fi
+
 # Run the server in the background with no hangup and pipe all outputs to output.log
 sudo -E nohup python3 -u run.py >> output.log 2>&1 &
-echo "Started flask server"
+echo "Started Flask server"
