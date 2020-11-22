@@ -48,8 +48,6 @@ export production_server=;    # IP address of production server
 export mysql_server=;         # IP address of MySQL server
 export mongodb_server=;       # IP address of MongoDB server
 export flask_server=;         # IP address of Flask server
-
-...
 ```
 
 6. Run `./start.sh`.
