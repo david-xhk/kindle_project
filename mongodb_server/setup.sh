@@ -31,16 +31,16 @@ echo "MongoDB service is ready"
 
 # Create MongoDB root user
 echo "Creating MongoDB root user..."
-if [ -z "$MONGO_ROOT_PASS" ]
+if [ -z "$MONGO_ROOT_PASSWORD" ]
 then
     echo "Enter MongoDB root password:"
-    read -s MONGO_ROOT_PASS
+    read -s MONGO_ROOT_PASSWORD
 fi
 read -d '' cmd << EOF
 use admin;
 db.createUser({
     user: "root",
-    pwd: "$MONGO_ROOT_PASS",
+    pwd: "$MONGO_ROOT_PASSWORD",
     roles: [ "root" ]
 });
 EOF
@@ -70,7 +70,7 @@ read -d '' cmd << EOF
 use admin;
 db.auth({
     user: "root",
-    pwd: "$MONGO_ROOT_PASS",
+    pwd: "$MONGO_ROOT_PASSWORD",
 });
 use $MONGO_DB;
 db.createUser({
@@ -89,17 +89,17 @@ echo "Created MongoDB database user"
 
 # Download MongoDB database source file
 echo "Downloading MongoDB database source file..."
-if [ -z "$PROD_IP" ]
+if [ -z "$PRODUCTION_HOST" ]
 then
     echo "Enter IP address of production server:"
-    read PROD_IP
+    read PRODUCTION_HOST
 fi
-if [ -z "$MONGO_FILE" ]
+if [ -z "$MONGO_SOURCE" ]
 then
     echo "Enter name of MongoDB database source file:"
-    read MONGO_FILE
+    read MONGO_SOURCE
 fi
-wget -q "$PROD_IP/$MONGO_FILE"
+wget -q "$PRODUCTION_HOST/$MONGO_SOURCE"
 echo "Downloaded MongoDB database source file"
 
 # Load MongoDB database source file
@@ -109,8 +109,8 @@ then
     echo "Enter name of MongoDB database collection:"
     read MONGO_COLLECTION
 fi
-mongoimport -u root -p $MONGO_ROOT_PASS -d $MONGO_DB -c $MONGO_COLLECTION --authenticationDatabase admin --file $MONGO_FILE
-rm $MONGO_FILE
+mongoimport -u root -p $MONGO_ROOT_PASSWORD -d $MONGO_DB -c $MONGO_COLLECTION --authenticationDatabase admin --file $MONGO_SOURCE
+rm $MONGO_SOURCE
 echo "Loaded MongoDB database source file"
 
 # Configure MongoDB
@@ -119,13 +119,13 @@ echo "Configuring MongoDB..."
 sudo sed -i "s/^#security:/security:/g" /etc/mongod.conf
 # Insert 'authorization: enabled' after security line
 sudo sed -i "/^security:/a \  authorization: enabled" /etc/mongod.conf
-if [ -z "$MONGO_BIND_ADDR" ]
+if [ -z "$MONGO_BIND_ADDRESS" ]
 then
     echo "Enter MongoDB bind address:"
-    read MONGO_BIND_ADDR
+    read MONGO_BIND_ADDRESS
 fi
 # Update bind address
-sudo sed -i "s/bindIp:.*/bindIp: $MONGO_BIND_ADDR/g" /etc/mongod.conf
+sudo sed -i "s/bindIp:.*/bindIp: $MONGO_BIND_ADDRESS/g" /etc/mongod.conf
 # Print mongod.conf for verification
 echo "MongoDB config file:"
 cat /etc/mongod.conf | sed 's/^/  /'

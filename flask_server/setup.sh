@@ -10,24 +10,24 @@ echo "Installed Flask dependencies"
 
 # Download Flask server source file
 echo "Downloading Flask source file..."
-if [ -z "$PROD_IP" ]
+if [ -z "$PRODUCTION_HOST" ]
 then
     echo "Enter IP address of production server:"
-    read PROD_IP
+    read PRODUCTION_HOST
 fi
-if [ -z "$FLASK_FILE" ]
+if [ -z "$FLASK_SOURCE" ]
 then
     echo "Enter name of Flask server source file:"
-    read FLASK_FILE
+    read FLASK_SOURCE
 fi
-wget -q "$PROD_IP/$FLASK_FILE"
+wget -q "$PRODUCTION_HOST/$FLASK_SOURCE"
 echo "Downloaded Flask server source file"
 
 # Installing Flask server source file
 echo "Installing Flask server source file..."
-unzip -q $FLASK_FILE -d temp
+unzip -q $FLASK_SOURCE -d temp
 mv temp/*/* .
-rm -r temp $FLASK_FILE setup.sh
+rm -r temp $FLASK_SOURCE setup.sh
 chmod u+x *.sh
 echo "Installed Flask server source file"
 
