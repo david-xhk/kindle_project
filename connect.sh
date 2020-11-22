@@ -25,6 +25,8 @@ else
     STATUS=$?
     if [ $STATUS -eq 0 ]; then
         echo "Executed '$2' in $HOST"
+    else
+        echo "Failed to execute '$2' in $HOST"
     fi
 fi
 
