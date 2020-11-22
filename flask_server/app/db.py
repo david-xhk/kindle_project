@@ -65,7 +65,8 @@ def random_reviewId():
     return random.randint(0, count)
 
 def random_asin():
-    count = mongo.db.kindle_metadata.count()
+    collection = app.config["MONGO_COLLECTION"]
+    count = mongo.db[collection].count()
     books = mongo_query()
     book = next(books.skip(random.randint(0, count)))
     return book["asin"]
