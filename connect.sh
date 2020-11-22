@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Load config file
-. load_config.sh
+source load_config.sh
 
 # Remote host
 host="ubuntu@${!1}"

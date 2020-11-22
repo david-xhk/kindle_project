@@ -5,7 +5,7 @@ if [ ${CONFIG_LOADED:-0} -eq 0 ]
 then    
     # Load config file
     echo "Loading config file..."
-    . ${1:-config}
+    source config
     echo "Loaded config file"
     echo
     

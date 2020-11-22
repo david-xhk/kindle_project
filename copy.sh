@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Load config file
-. load_config.sh
+source load_config.sh
 
 # Where to copy from and to
 where=${3:-there}
