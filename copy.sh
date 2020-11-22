@@ -11,7 +11,7 @@ fi
 # Where to copy from and to
 WHERE=${3:-there}
 if [ "$WHERE" == there ]; then
-    FROM="'$1/$2'"
+    FROM="$1/$2"
     TO="ubuntu@${!1}:~"
 
 elif [ "$WHERE" == here ]; then
@@ -25,7 +25,7 @@ fi
 
 # Copy files
 echo "Copying $FROM to $TO..."
-scp -i ec2-key.pem  -o "StrictHostKeyChecking no" -o "ConnectionAttempts 20" -r "$FROM" "$TO"
+scp -i ec2-key.pem  -o "StrictHostKeyChecking no" -o "ConnectionAttempts 20" -r $FROM $TO
 
 # Print status
 STATUS=$?
