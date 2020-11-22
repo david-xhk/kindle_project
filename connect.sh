@@ -1,34 +1,33 @@
 #!/bin/bash
 
 # Load config file
-if [ -z "$CONFIG_DONE" ]; then
-    echo "Loading config file..."
-    source config
-    echo "Loaded config file"
-    echo
-fi
+. load_config.sh
 
 # Remote host
-HOST="ubuntu@${!1}"
+host="ubuntu@${!1}"
 
-# Start bash shell if no command was provided in second argument
-if [ -z "$2" ]; then
-    echo "Connecting to $HOST..."
-    ssh -i ec2-key.pem -o "StrictHostKeyChecking no" -o "ConnectionAttempts 20" -t $HOST "$(<config) sudo -E bash -l"
-    STATUS=$?
-    echo "Connection ended with exit status $STATUS"
-
-# Execute the provided command
+# Check second argument for command
+if [ -z "$2" ]
+then
+    # Start bash shell if no command provided
+    echo "Connecting to $host..."
+    ssh -i ec2-key.pem -o "StrictHostKeyChecking no" -o "ConnectionAttempts 20" -t $host "$(<config) sudo -E bash -l"
+    exit_status=$?
+    message="Connection ended with exit status $exit_status"
 else
-    echo "Executing '$2' in $HOST..."
-    ssh -i ec2-key.pem -o "StrictHostKeyChecking no" -o "ConnectionAttempts 20" $HOST "$(<config) sudo -E $2"
-    STATUS=$?
-    if [ $STATUS -eq 0 ]; then
-        echo "Executed '$2' in $HOST"
+    # Execute provided command
+    echo "Executing '$2' in $host..."
+    ssh -i ec2-key.pem -o "StrictHostKeyChecking no" -o "ConnectionAttempts 20" $host "$(<config) sudo -E $2"
+    exit_status=$?
+    if [ $exit_status -eq 0 ]
+    then
+        message="Executed '$2' in $host"
     else
-        echo "Failed to execute '$2' in $HOST"
+        message="Failed to execute '$2' in $host"
     fi
 fi
 
+# Print message and exit
+echo "$message"
 echo
-exit $STATUS
+exit $exit_status

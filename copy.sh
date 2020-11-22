@@ -1,39 +1,37 @@
 #!/bin/bash
 
 # Load config file
-if [ -z "$CONFIG_DONE" ]; then
-    echo "Loading config file..."
-    source config
-    echo "Loaded config file"
-    echo
-fi
+. load_config.sh
 
 # Where to copy from and to
-WHERE=${3:-there}
-if [ "$WHERE" == there ]; then
-    FROM="$1/$2"
-    TO="ubuntu@${!1}:~"
-
-elif [ "$WHERE" == here ]; then
-    FROM="ubuntu@${!1}:$2"
-    TO="$1"
-
+where=${3:-there}
+if [ "$where" == there ]
+then
+    # Copy from local directory to remote home directory
+    from="$1/$2"
+    to="ubuntu@${!1}:~"
+elif [ "$where" == here ]
+then
+    # Copy from remote directory to local directory
+    from="ubuntu@${!1}:$2"
+    to="$1"
 else
-    echo "WHERE (arg3) must be either 'here' or 'there'"
+    echo "arg 3 ('$3') must be either 'here' or 'there'"
     exit 1
 fi
 
 # Copy files
-echo "Copying $FROM to $TO..."
-scp -i ec2-key.pem  -o "StrictHostKeyChecking no" -o "ConnectionAttempts 20" -r $FROM $TO
-
-# Print status
-STATUS=$?
-if [ $STATUS -ne 0 ]; then
-    echo "Failed to copy $FROM to $TO"
+echo "Copying $from to $to..."
+scp -i ec2-key.pem  -o "StrictHostKeyChecking no" -o "ConnectionAttempts 20" -r $from $to
+exit_status=$?
+if [ $exit_status -ne 0 ]
+then
+    message="Failed to copy $from to $to"
 else
-    echo "Copied $FROM to $TO"
+    message="Copied $from to $to"
 fi
 
+# Print message and exit
+echo "$message"
 echo
-exit $STATUS
+exit $exit_status
