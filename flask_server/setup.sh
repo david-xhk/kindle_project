@@ -9,7 +9,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install python3-pip unzip libmysqlcl
 echo "Installed Flask dependencies"
 
 # Download Flask server source file
-echo "Downloading Flask source file..."
+echo "Downloading Flask server source file..."
 if [ -z "$PRODUCTION_HOST" ]
 then
     echo "Enter IP address of production server:"
