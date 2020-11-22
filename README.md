@@ -13,7 +13,6 @@ export DEV_ADDRESS=;          # IP address(es) of developer
 export DEV_PASSWORD=;         # Password for developer
 export DEV_KEY_FILE=;         # Name of developer key file
 
-export MYSQL_BIND_ADDRESS=;   # Bind address of MySQL server
 export MYSQL_DB=;             # Name of MySQL database
 export MYSQL_TABLE=;          # Name of MySQL database table
 export MYSQL_SOURCE=;         # Name of MySQL source file
@@ -21,7 +20,6 @@ export MYSQL_USER=;           # Name of MySQL user
 export MYSQL_PASSWORD=;       # Password for MySQL user
 export MYSQL_ROOT_PASSWORD=;  # Password for MySQL root
 
-export MONGO_BIND_ADDRESS=;   # Bind address of MongoDB server
 export MONGO_DB=;             # Name of MongoDB database
 export MONGO_COLLECTION=;     # Name of MongoDB database collection
 export MONGO_SOURCE=;         # Name of MongoDB source file
