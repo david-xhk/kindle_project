@@ -30,6 +30,6 @@ export MONGO_PASSWORD=;              # Password for MongoDB user
 export MONGO_ROOT_PASS=;             # Password for MongoDB root
 
 export FLASK_IP=$flask_server;
-export FLASK_FILE=flask_server.zip;
+export FLASK_FILE=;                  # Name of Flask source file
 
 export CONFIG_DONE=1;
