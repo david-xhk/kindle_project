@@ -1,5 +1,8 @@
+#!/bin/bash
 
-cd ~/production_server/root
+cd root
 
-# start the server on port 80 in the background with no hangup and pipe all outputs to output.log
-nohup python3 -u -m http.server 80 > ~/production_server/output.log &
+# Start the server on port 80 in the background with no hangup and pipe all outputs to output.log
+echo "Starting production server..."
+sudo nohup python3 -u -m http.server 80 >> ../output.log 2>&1 &
+echo "Started production server"

@@ -1,3 +1,6 @@
+#!/bin/bash
 
-# kill all python3 processes
-pkill -f python3
+# Kill all python3 processes
+echo "Stopping production server"
+sudo pkill -f python3
+echo "Stopped production server"
