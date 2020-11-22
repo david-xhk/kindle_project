@@ -7,6 +7,8 @@ export DEV_IP=;                      # IP address(es) of developer
 export DEV_PASSWORD=;                # Password for developer
 
 export PROD_IP=$production_server;
+export FLASK_IP=$flask_server;
+export FLASK_FILE=;                  # Name of Flask source file
 
 export MYSQL_HOST=$mysql_server;
 export MYSQL_BIND_ADDR=;             # Bind address of MySQL server
@@ -28,8 +30,5 @@ export MONGO_FILE=;                  # Name of MongoDB source file
 export MONGO_USER=;                  # Name of MongoDB user
 export MONGO_PASSWORD=;              # Password for MongoDB user
 export MONGO_ROOT_PASS=;             # Password for MongoDB root
-
-export FLASK_IP=$flask_server;
-export FLASK_FILE=;                  # Name of Flask source file
 
 export CONFIG_DONE=1;
