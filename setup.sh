@@ -9,7 +9,7 @@ if [ -z "$CONFIG_DONE" ]; then
 fi
 
 # Copy setup.sh to server
-./copy.sh $1 setup.sh
+./copy.sh $1 setup.sh &&
 
 # Setup server
 ./connect.sh $1 ./setup.sh

@@ -12,10 +12,10 @@ fi
 FILE=${2:-'*'}
 
 # Stop server and remove file
-./connect.sh $1 "bash -c 'if [ -f stop.sh ]; then ./stop.sh && sleep 5; fi; rm -rf $FILE;'"
+./connect.sh $1 "bash -c 'if [ -f stop.sh ]; then ./stop.sh && sleep 5; fi; rm -rf $FILE;'" &&
 
 # Copy file to server
-./copy.sh $1 "$FILE"
+./copy.sh $1 "$FILE" &&
 
 # Restart server
 ./connect.sh $1 ./start.sh
