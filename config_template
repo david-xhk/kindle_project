@@ -6,6 +6,7 @@ export flask_server=;
 export DEV_ADDRESS=;
 export DEV_PASSWORD=;
 export DEV_KEY_FILE=;
+export SSH_OPTIONS="-i $DEV_KEY_FILE -o StrictHostKeyChecking=no -o ConnectionAttempts=20"
 
 export PRODUCTION_HOST=$production_server;
 export FLASK_HOST=$flask_server;
