@@ -1,5 +1,26 @@
 #!/bin/bash
 
+# Log function for debugging purposes
+log() {
+    # Read input from arguments or stdin
+    if [ -z "$1" ]; then read -d '' input; else input="$1"; fi
+    # Indent input by 2 spaces
+    echo "$input" | sed 's/^/  /'
+}
+
+# Command to run MongoDB shell
+mongo_shell="mongo --quiet"
+
+# Function to execute MongoDB commands
+execute() {
+    # Read command from arguments or stdin
+    if [ -z "$1" ]; then read -d '' cmd; else cmd="$1"; fi
+    echo "Executing MongoDB command:"
+    log "$cmd"
+    # Pipe command into MongoDB shell
+    echo "$cmd" | $mongo_shell
+}
+
 echo "Setting up MongoDB server..."
 
 # Install MongoDB
@@ -23,7 +44,7 @@ echo "Started MongoDB service"
 
 # Wait for MongoDB service to be ready to accept connections
 echo "Waiting for MongoDB service to be ready..."
-until mongo --quiet --eval "print(\"Connect succeeded\")" 2>&1 >/dev/null
+until mongo --quiet --eval 'print("Connect succeeded")' 2>&1 >/dev/null
 do
     sleep 1
 done
@@ -36,7 +57,7 @@ then
     echo "Enter MongoDB root password:"
     read -s MONGO_ROOT_PASSWORD
 fi
-read -d '' cmd << EOF
+execute << EOF
 use admin;
 db.createUser({
     user: "root",
@@ -44,9 +65,6 @@ db.createUser({
     roles: [ "root" ]
 });
 EOF
-echo "Executing MongoDB command:"
-echo "$cmd" | sed 's/^/  /'
-echo "$cmd" | mongo --quiet
 echo "Created MongoDB root user"
 
 # Create MongoDB database user
@@ -66,7 +84,7 @@ then
     echo "Enter password for MongoDB database user:"
     read -s MONGO_PASSWORD
 fi
-read -d '' cmd << EOF
+execute << EOF
 use admin;
 db.auth({
     user: "root",
@@ -82,9 +100,6 @@ db.createUser({
            ]
 });
 EOF
-echo "Executing MongoDB command:"
-echo "$cmd" | sed 's/^/  /'
-echo "$cmd" | mongo --quiet
 echo "Created MongoDB database user"
 
 # Download MongoDB database source file
@@ -128,7 +143,7 @@ fi
 sudo sed -i "s/bindIp:.*/bindIp: $MONGO_BIND_ADDRESS/g" /etc/mongod.conf
 # Print mongod.conf for verification
 echo "MongoDB config file:"
-cat /etc/mongod.conf | sed 's/^/  /'
+cat /etc/mongod.conf | log
 echo "Configured MongoDB"
 
 # Restart MongoDB service

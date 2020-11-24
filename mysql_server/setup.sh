@@ -1,5 +1,26 @@
 #!/bin/bash
 
+# Log function for debugging purposes
+log() {
+    # Read input from arguments or stdin
+    if [ -z "$1" ]; then read -d '' input; else input="$1"; fi
+    # Indent input by 2 spaces
+    echo "$input" | sed 's/^/  /'
+}
+
+# Command to run MySQL shell (with native root authorization)
+mysql_shell="sudo mysql"
+
+# Function to execute MySQL commands
+execute() {
+    # Read command from arguments or stdin
+    if [ -z "$1" ]; then read -d '' cmd; else cmd="$1"; fi
+    echo "Executing MySQL command:"
+    log "$cmd"
+    # Pipe command into MySQL shell and exclude insecure warning messages
+    echo "$cmd" | $mysql_shell 2>&1 | grep -v insecure
+}
+
 echo "Setting up MySQL server..."
 
 # Install MySQL
@@ -28,14 +49,14 @@ then
     echo "Enter MySQL root password:"
     read -s MYSQL_ROOT_PASSWORD
 fi
-read -d '' cmd << EOF
+execute << EOF
 alter user 'root'@'localhost' identified with mysql_native_password by '$MYSQL_ROOT_PASSWORD';
 flush privileges;
 EOF
-echo "Executing MySQL command:"
-echo "$cmd" | sed 's/^/  /'
-echo "$cmd" | sudo mysql
 echo "Changed MySQL root password"
+
+# New command to run MySQL shell (with root password authorization)
+mysql_shell="mysql -u root -h localhost -p$MYSQL_ROOT_PASSWORD"
 
 # Create MySQL database
 echo "Creating MySQL database..."
@@ -44,10 +65,7 @@ then
     echo "Enter MySQL database name:"
     read MYSQL_DB
 fi
-cmd="create database $MYSQL_DB;"
-echo "Executing MySQL command:"
-echo "$cmd" | sed 's/^/  /'
-echo "$cmd" | mysql -u root -h localhost -p$MYSQL_ROOT_PASSWORD 2>&1 | grep -v "insecure"
+execute "create database $MYSQL_DB;"
 echo "Created MySQL database"
 
 # Create MySQL database users
@@ -77,18 +95,18 @@ then
     echo "Enter IP address(es) of development user(s):"
     read DEV_ADDRESS
 fi
-cmd=("create user '$MYSQL_USER'@'$MYSQL_USER_ADDRESS' identified by '$MYSQL_PASSWORD';"
-     "grant all on $MYSQL_DB.* to '$MYSQL_USER'@'$MYSQL_USER_ADDRESS';")
+execute << EOF
+create user '$MYSQL_USER'@'$MYSQL_USER_ADDRESS' identified by '$MYSQL_PASSWORD';
+grant all on $MYSQL_DB.* to '$MYSQL_USER'@'$MYSQL_USER_ADDRESS';
+flush privileges;
+EOF
 for IP in $DEV_ADDRESS
-do
-    cmd+=("create user 'dev'@'$IP' identified by '$DEV_PASSWORD';"
-          "grant all on \`%\`.* to 'dev'@'$IP';")
+do execute << EOF
+create user 'dev'@'$IP' identified by '$DEV_PASSWORD';
+grant all on \`%\`.* to 'dev'@'$IP';
+flush privileges;
+EOF
 done
-cmd+=("flush privileges;")
-IFS=$'\n'; cmd="${cmd[*]}"
-echo "Executing MySQL command:"
-echo "$cmd" | sed 's/^/  /'
-echo "$cmd" | mysql -u root -h localhost -p$MYSQL_ROOT_PASSWORD 2>&1 | grep -v "insecure"
 echo "Created MySQL database users"
 
 # Download MySQL database source file
@@ -113,7 +131,7 @@ then
     echo "Enter name of MySQL database table:"
     read MYSQL_TABLE
 fi
-read -d '' cmd << EOF
+execute << EOF
 use $MYSQL_DB;
 
 drop table if exists $MYSQL_TABLE;
@@ -140,22 +158,16 @@ lines terminated by '\\\r\\\n'
 ignore 1 rows
 (reviewId, asin, helpful, overall, reviewText, reviewTime, reviewerID, reviewerName, summary, unixReviewTime);
 EOF
-echo "Executing MySQL command:"
-echo "$cmd" | sed 's/^/  /'
-echo "$cmd" | mysql -u root -h localhost -p$MYSQL_ROOT_PASSWORD 2>&1 | grep -v "insecure"
 rm $MYSQL_SOURCE
 echo "Loaded MySQL database source file"
 
 # Create indexes
 echo "Creating indexes..."
-read -d '' cmd << EOF
+execute << EOF
 use $MYSQL_DB;
 create index reviewId on $MYSQL_TABLE (reviewId);
 create index asin on $MYSQL_TABLE (asin);
 EOF
-echo "Executing MySQL command:"
-echo "$cmd" | sed 's/^/  /'
-echo "$cmd" | mysql -u root -h localhost -p$MYSQL_ROOT_PASSWORD 2>&1 | grep -v "insecure"
 echo "Created indexes"
 
 # Configure MySQL
@@ -171,9 +183,9 @@ sudo tee -a /etc/mysql/my.cnf << EOF >/dev/null
 [mysqld]
 bind-address=$MYSQL_BIND_ADDRESS
 EOF
-# Print my.cnf for verification
+# Print my.cnf for debugging purposes
 echo "MySQL config file:"
-cat /etc/mysql/my.cnf | sed 's/^/  /'
+cat /etc/mysql/my.cnf | log
 echo "Configured MySQL"
 
 # Restart MySQL service
