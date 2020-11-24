@@ -20,16 +20,9 @@ else
     exit 1
 fi
 
-# Key file
-if [ -z "$DEV_KEY_FILE" ]
-then
-    echo "Enter name of key file:"
-    read DEV_KEY_FILE
-fi
-
 # Copy files
 echo "Copying $from to $to..."
-scp -i "$DEV_KEY_FILE"  -o "StrictHostKeyChecking no" -o "ConnectionAttempts 20" -r $from $to
+scp $SSH_OPTIONS -r $from $to
 exit_status=$?
 if [ $exit_status -ne 0 ]
 then
