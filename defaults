@@ -26,12 +26,12 @@ export MONGO_USER=user;
 export MONGO_BIND_ADDRESS=0.0.0.0;
 
 export FLASK_IMAGE_ID=ami-0f82752aa17ff8f5d;
-export FLASK_INSTANCE_TYPE=t2.xlarge;
+export FLASK_INSTANCE_TYPE=t2.large;
 
 export HADOOP_MASTER_IMAGE_ID=ami-0f82752aa17ff8f5d;
-export HADOOP_MASTER_INSTANCE_TYPE=t2.xlarge;
+export HADOOP_MASTER_INSTANCE_TYPE=t2.large;
 export HADOOP_WORKER_IMAGE_ID=ami-0f82752aa17ff8f5d;
-export HADOOP_WORKER_INSTANCE_TYPE=t2.xlarge;
+export HADOOP_WORKER_INSTANCE_TYPE=t2.large;
 export HADOOP_NUM_WORKERS=4;
 export HADOOP_MASTER=hadoop-master;
 export HADOOP_WORKER_PREFIX=hadoop-worker;
