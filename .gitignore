@@ -1,6 +1,10 @@
 *.pyc
 .vscode
 config
-!production_server/root/
-production_server/root/*
-!production_server/root/flask_server.zip
+logs
+*.pem
+*.tgz
+*.tar.gz
+*.json
+*.csv
+id_rsa*

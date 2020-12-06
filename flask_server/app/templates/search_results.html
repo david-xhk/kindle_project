@@ -1,0 +1,25 @@
+<div id="search-results" class="mt-4">
+  <h2>Results</h2>
+  {%- if results is string %}
+  <p>{{ results }}</p>
+  {%- else %}
+  <p>Showing the top 20 results.</p>
+  <div class="container-fluid">
+    <div class="row flex-row flex-nowrap horizontal-scroll">
+      {%- for book in results %}
+      <div class="col-6">
+        <div class="card card-block align-items-center">
+          <img class="card-img-top" src="{{ book.imUrl }}" alt="image for {{ book.title }}" style="width:300px;height:300px;"/>
+          <div class="card-body w-100">
+            <h5 class="card-title">{{ book.title }}</h5>
+            <p class="card-text"><b>Price:</b> {{ book.price }}</p>
+            <p class="card-text"><b>Rating:</b> {{ book.rating }}</p>
+            <a href="{{ url_for('get_book', asin=book.asin) }}" class="card-link">See more</a>
+          </div>
+        </div>
+      </div>
+      {%- endfor %}
+    </div>
+  </div>
+  {%- endif %}
+</div>

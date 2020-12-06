@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content -%}
+<h1>Search for eBook</h1>
+<form action="{{ url_for('search_book') }}" method="post" id="search-form">
+  <input type="hidden" name="source" value="search_form" />
+  <div class="form-group">
+    <label for="search-title">Title</label>
+    <input type="text" class="form-control" id="search-title" name="title" placeholder="Book title" value="{{ search.title if search and search.title else '' }}">
+  </div>
+  <div class="form-group">
+    <label for="search-filter-by">Filter By</label>
+    <select multiple type="text" class="form-control typeahead" data-role="tagsinput" id="search-filter-by" name="filter_by" placeholder="Book category"></select>
+  </div>
+  <div class="form-group">
+    <label for="search-sort-by">Sort By</label>
+    <select class="custom-select" id="search-sort-by" name="sort_by">
+      <option value="" {{ "selected" if not search or not search.sort_by else "" }}>None</option>
+      <option value="price" {{ "selected" if search and search.sort_by == "price" else "" }}>Price</option>
+      <option value="rating" {{ "selected" if search and search.sort_by == "rating" else "" }}>Rating</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="search-order-by">Order By</label>
+    <select class="custom-select" id="search-order-by" name="order_by">
+      <option value="" {{ "selected" if not search or not search.order_by else "" }}>None</option>
+      <option value="descending" {{ "selected" if search and search.order_by == -1 else "" }}>Highest to Lowest</option>
+      <option value="ascending" {{ "selected" if search and search.order_by == 1 else "" }}>Lowest to Highest</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% block search_results -%}{%- endblock %}
+{%- endblock %}

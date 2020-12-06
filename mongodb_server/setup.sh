@@ -9,22 +9,22 @@ log() {
 }
 
 # Command to run MongoDB shell
-mongo_shell="mongo --quiet"
+mongo_shell='mongo --quiet'
 
 # Function to execute MongoDB commands
 execute() {
     # Read command from arguments or stdin
     if [ -z "$1" ]; then read -d '' cmd; else cmd="$1"; fi
-    echo "Executing MongoDB command:"
+    echo 'Executing MongoDB command:'
     log "$cmd"
     # Pipe command into MongoDB shell
     echo "$cmd" | $mongo_shell
 }
 
-echo "Setting up MongoDB server..."
+echo 'Setting up MongoDB server'
 
 # Install MongoDB
-echo "Installing MongoDB..."
+echo 'Installing MongoDB'
 # Import the public key used by the package management system
 wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add - >/dev/null
 # Create a list file for MongoDB
@@ -35,28 +35,25 @@ EOF
 sudo apt-get update -qq >/dev/null
 # Install the MongoDB packages
 sudo DEBIAN_FRONTEND=noninteractive apt-get install mongodb-org -qq >/dev/null
-echo "Installed MongoDB"
 
 # Start MongoDB service
-echo "Starting MongoDB service..."
+echo 'Starting MongoDB service'
 sudo service mongod start
-echo "Started MongoDB service"
 
 # Wait for MongoDB service to be ready to accept connections
-echo "Waiting for MongoDB service to be ready..."
+echo 'Waiting for MongoDB service to be ready...'
 until mongo --quiet --eval 'print("Connect succeeded")' 2>&1 >/dev/null
 do
     sleep 1
 done
-echo "MongoDB service is ready"
 
 # Create MongoDB root user
-echo "Creating MongoDB root user..."
 if [ -z "$MONGO_ROOT_PASSWORD" ]
 then
-    echo "Enter MongoDB root password:"
-    read -s MONGO_ROOT_PASSWORD
+    echo 'Enter MongoDB root password:'
+    read MONGO_ROOT_PASSWORD
 fi
+echo 'Creating MongoDB root user'
 execute << EOF
 use admin;
 db.createUser({
@@ -65,25 +62,24 @@ db.createUser({
     roles: [ "root" ]
 });
 EOF
-echo "Created MongoDB root user"
 
 # Create MongoDB database user
-echo "Creating MongoDB database user..."
 if [ -z "$MONGO_DB" ]
 then
-    echo "Enter MongoDB database name:"
+    echo 'Enter MongoDB database name:'
     read MONGO_DB
 fi
 if [ -z "$MONGO_USER" ]
 then
-    echo "Enter name of MongoDB database user:"
+    echo 'Enter name of MongoDB database user:'
     read MONGO_USER
 fi
 if [ -z "$MONGO_PASSWORD" ]
 then
-    echo "Enter password for MongoDB database user:"
-    read -s MONGO_PASSWORD
+    echo 'Enter password for MongoDB database user:'
+    read MONGO_PASSWORD
 fi
+echo 'Creating MongoDB database user'
 execute << EOF
 use admin;
 db.auth({
@@ -100,55 +96,62 @@ db.createUser({
            ]
 });
 EOF
-echo "Created MongoDB database user"
-
-# Download MongoDB database source file
-echo "Downloading MongoDB database source file..."
-if [ -z "$PRODUCTION_HOST" ]
-then
-    echo "Enter IP address of production server:"
-    read PRODUCTION_HOST
-fi
-if [ -z "$MONGO_SOURCE" ]
-then
-    echo "Enter name of MongoDB database source file:"
-    read MONGO_SOURCE
-fi
-wget -q "$PRODUCTION_HOST/$MONGO_SOURCE"
-echo "Downloaded MongoDB database source file"
 
 # Load MongoDB database source file
-echo "Loading MongoDB database source file..."
+if [ -z "$MONGO_SOURCE" ]
+then
+    echo 'Enter name of MongoDB database source file:'
+    read MONGO_SOURCE
+fi
 if [ -z "$MONGO_COLLECTION" ]
 then
-    echo "Enter name of MongoDB database collection:"
+    echo 'Enter name of MongoDB database collection:'
     read MONGO_COLLECTION
 fi
-mongoimport -u root -p $MONGO_ROOT_PASSWORD -d $MONGO_DB -c $MONGO_COLLECTION --authenticationDatabase admin --file $MONGO_SOURCE
-rm $MONGO_SOURCE
-echo "Loaded MongoDB database source file"
+echo 'Loading MongoDB database source file'
+mongoimport -u root -p "$MONGO_ROOT_PASSWORD" -d "$MONGO_DB" -c "$MONGO_COLLECTION" --authenticationDatabase admin --file "$MONGO_SOURCE"
+rm "$MONGO_SOURCE"
+
+# Create indexes
+echo 'Creating MongoDB indexes'
+execute << EOF
+use admin;
+db.auth({
+    user: "root",
+    pwd: "$MONGO_ROOT_PASSWORD",
+});
+use $MONGO_DB;
+db.$MONGO_COLLECTION.createIndex({ "asin": 1 }, { unique: true });
+db.$MONGO_COLLECTION.createIndex({ "price": -1 });
+db.$MONGO_COLLECTION.createIndex({ "categories": 1 });
+db.$MONGO_COLLECTION.createIndex({ "title": "text" });
+EOF
 
 # Configure MongoDB
-echo "Configuring MongoDB..."
+if [ -z "$MONGO_BIND_ADDRESS" ]
+then
+    echo 'Enter MongoDB bind address:'
+    read MONGO_BIND_ADDRESS
+fi
+echo 'Configuring MongoDB...'
 # Uncomment security line
 sudo sed -i "s/^#security:/security:/g" /etc/mongod.conf
 # Insert 'authorization: enabled' after security line
 sudo sed -i "/^security:/a \  authorization: enabled" /etc/mongod.conf
-if [ -z "$MONGO_BIND_ADDRESS" ]
-then
-    echo "Enter MongoDB bind address:"
-    read MONGO_BIND_ADDRESS
-fi
 # Update bind address
 sudo sed -i "s/bindIp:.*/bindIp: $MONGO_BIND_ADDRESS/g" /etc/mongod.conf
 # Print mongod.conf for verification
-echo "MongoDB config file:"
+echo 'MongoDB config file:'
 cat /etc/mongod.conf | log
-echo "Configured MongoDB"
 
 # Restart MongoDB service
-echo "Restarting MongoDB service..."
+echo 'Restarting MongoDB service'
 sudo service mongod restart
-echo "Restarted MongoDB service"
 
-echo "Finished setting up MongoDB server"
+# Save MongoDB configuration
+echo 'Saving MongoDB configuration'
+cat << EOF >> config
+export MONGO_ROOT_PASSWORD=$MONGO_ROOT_PASSWORD;
+export MONGO_DB=$MONGO_DB;
+export MONGO_COLLECTION=$MONGO_COLLECTION;
+EOF

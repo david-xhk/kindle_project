@@ -18,3 +18,25 @@ def convert_flat_to_hierarchical(flat_tree):
                 pointer["children"][name] = {"name": name, "children": {}}
             pointer = pointer["children"][name]
     return tree
+
+def convert_to_int(number, base=None):
+    return int(number, base)
+
+def convert_to_base(number, base): 
+    chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" 
+    if number < base:
+        return chars[number] 
+    else: 
+        return convert_to_base(number // base, base) + chars[number % base] 
+
+def round_off(number, sf):
+    fmt_string = "{:." + str(sf) + "f}"
+    rounded_off = fmt_string.format(number)
+    rounded_down = int(number)
+    if float(rounded_off) - rounded_down == 0:
+        return str(rounded_down)
+    else:
+        return rounded_off
+
+def average(lst):
+    return sum(lst)/len(lst)
