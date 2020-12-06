@@ -5,7 +5,7 @@ export AWS_REGION=us-east-1;
 export SSH_OPTIONS='-o StrictHostKeyChecking=no -o ConnectionAttempts=20'
 
 export MYSQL_IMAGE_ID=ami-0f82752aa17ff8f5d;
-export MYSQL_INSTANCE_TYPE=t2.micro;
+export MYSQL_INSTANCE_TYPE=t2.xlarge;
 export MYSQL_PORT=3306;
 export MYSQL_DB=kindle_ebooks;
 export MYSQL_TABLE=kindle_reviews;
@@ -16,7 +16,7 @@ export MYSQL_BIND_ADDRESS=0.0.0.0;
 export MYSQL_MAX_ALLOWED_PACKET=128M;
 
 export MONGO_IMAGE_ID=ami-0f82752aa17ff8f5d;
-export MONGO_INSTANCE_TYPE=t2.micro;
+export MONGO_INSTANCE_TYPE=t2.xlarge;
 export MONGO_PORT=27017;
 export MONGO_DB=kindle_ebooks;
 export MONGO_COLLECTION=kindle_metadata;
@@ -26,7 +26,7 @@ export MONGO_USER=user;
 export MONGO_BIND_ADDRESS=0.0.0.0;
 
 export FLASK_IMAGE_ID=ami-0f82752aa17ff8f5d;
-export FLASK_INSTANCE_TYPE=t2.micro;
+export FLASK_INSTANCE_TYPE=t2.xlarge;
 
 export HADOOP_MASTER_IMAGE_ID=ami-0f82752aa17ff8f5d;
 export HADOOP_MASTER_INSTANCE_TYPE=t2.xlarge;
