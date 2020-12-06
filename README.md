@@ -8,4 +8,6 @@ Here's what you need to do to get all the servers started.
 
 2. Run `./setup.sh`. You can check `logs/` for the setup progress.
 
-3. Once `./setup.sh` finishes running, you may start the analytics by running `./run_analytics`.
+3. Once `./setup.sh` finishes running, you may start the analytics by running `./run_analytics.sh`.
+
+4. You can shut down all servers by running `./teardown.sh`.
