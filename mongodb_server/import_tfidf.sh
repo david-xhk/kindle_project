@@ -27,5 +27,5 @@ execute() {
 
 # Import tf-idf results
 echo 'Importing tf-idf results'
-mongoimport -u root -p "$MONGO_ROOT_PASSWORD" -d "$MONGO_DB" -c tf_idf --authenticationDatabase admin --file "tf_idf.json"
-rm "tf_idf.json"
+mongoimport -u root -p "$MONGO_ROOT_PASSWORD" -d "$MONGO_DB" -c tf_idf --authenticationDatabase admin --file "tfidf.json"
+rm "tfidf.json"
