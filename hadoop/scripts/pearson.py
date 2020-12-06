@@ -33,10 +33,10 @@ if __name__ == "__main__":
     # reviews = reviews.withColumn("words", tokenize("reviewText"))
 
     reviews = RegexTokenizer(inputCol="reviewText", outputCol="words", pattern="\\W").transform(reviews)
-    reviews = data.drop("reviewText")
+    reviews = reviews.drop("reviewText")
 
-    reviews = data.withColumn("num_words", size("words"))
-    reviews = data.drop("words")
+    reviews = reviews.withColumn("num_words", size("words"))
+    reviews = reviews.drop("words")
 
     reviews = reviews.groupBy("asin").agg(avg("num_words").alias("average_review_length"))
     reviews = reviews.drop("num_words")
