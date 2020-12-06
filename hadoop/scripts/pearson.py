@@ -30,9 +30,9 @@ if __name__ == "__main__":
     # def tokenize(string):
     #     return word_tokenize(string)
 
-    # data = data.withColumn("words", tokenize("reviewText"))
+    # reviews = reviews.withColumn("words", tokenize("reviewText"))
 
-    reviews = RegexTokenizer(inputCol="reviewText", outputCol="words", pattern="\\W").transform(data)
+    reviews = RegexTokenizer(inputCol="reviewText", outputCol="words", pattern="\\W").transform(reviews)
     reviews = data.drop("reviewText")
 
     reviews = data.withColumn("num_words", size("words"))
