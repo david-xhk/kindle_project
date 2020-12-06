@@ -464,4 +464,5 @@ do
 done
 
 # Return Flask DNS
+echo
 echo "Flask server is running at http://$FLASK_PUBLIC_DNS"

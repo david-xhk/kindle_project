@@ -79,3 +79,8 @@ ssh $SSH_OPTIONS "ubuntu@$MONGO_PRIVATE_IPV4" "./import_tfidf.sh"
 # Send Pearson results to Flask server
 echo 'Sending Pearson results to Flask server'
 scp $SSH_OPTIONS -r output/pearson "ubuntu@$FLASK_PRIVATE_IPV4:~/app/static"
+
+echo
+echo "TF-IDF results are available at http://$FLASK_PUBLIC_DNS/tfidf/<reviewId>"
+echo "Pearson correlation can be found at http://$FLASK_PUBLIC_DNS/pearson"
+echo "Pearson correlation data can be found at http://$FLASK_PUBLIC_DNS/pearson/data"
