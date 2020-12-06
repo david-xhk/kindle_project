@@ -106,7 +106,10 @@ def get_categories():
 
 @app.route("/tfidf/<reviewId>")
 def get_tfidf(reviewId):
-    return db.get_tfidf(reviewId)
+    result = db.get_tfidf(reviewId)
+    if result is None:
+        abort(404)
+    return result["tfidf"]
 
 @app.route("/pearson")
 def get_pearson():

@@ -125,4 +125,4 @@ def get_categories():
     return sorted(categories)
 
 def get_tfidf(reviewId):
-    return mongo.db.tf_idf.find({"reviewId": reviewId}, {"_id": 0, "tfidf": 1})
+    return next(mongo.db.tf_idf.find({ "reviewId": int(reviewId) }, { "_id": 0, "tfidf": 1 }), None)

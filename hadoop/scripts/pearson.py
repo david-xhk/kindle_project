@@ -66,6 +66,6 @@ if __name__ == "__main__":
     pearson.write.csv("hdfs:/output/pearson/coef", header=False, mode="overwrite")
 
     data = xy.toDF(["x", "y"])
-    data.write.json("hdfs:.//output/pearson/data", mode="overwrite")
+    data.write.json("hdfs:/output/pearson/data", mode="overwrite")
 
     spark.stop()
