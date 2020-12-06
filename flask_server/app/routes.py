@@ -113,7 +113,7 @@ def get_tfidf(reviewId):
 
 @app.route("/pearson")
 def get_pearson():
-    return redirect("/static/pearson/coef.txt")
+    return redirect("/static/pearson/result.txt")
 
 @app.route("/pearson/data")
 def get_pearson_data():

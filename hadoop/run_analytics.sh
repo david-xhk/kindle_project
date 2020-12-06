@@ -65,7 +65,7 @@ sudo -i -u hadoop bash -c 'hdfs dfs -get /output/* output'
 sudo mv /home/hadoop/output/* output
 sudo chown -R ubuntu:ubuntu output
 collate output/tfidf json
-collate output/pearson/coef txt
+collate output/pearson/result txt
 collate output/pearson/data json
 
 # Run stop script
