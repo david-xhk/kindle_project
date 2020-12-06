@@ -4,10 +4,13 @@
 
 Here's what you need to do to get all the servers started.
 
-1. Make a copy of `config_template` and name it `config`.
+1. Edit `defaults` and `credentials` with your preferred configurations.
 
-2. Define the following environment variables in `config`.
+2. Run `./setup.sh`. You can check `logs/` for the setup progress.
 
+3. Once `./setup.sh` finishes running, you may start the analytics by running `./run_analytics`.
+
+4.
 ```bash
 export DEV_ADDRESS=;          # IP address(es) of developer
 export DEV_PASSWORD=;         # Password for developer
