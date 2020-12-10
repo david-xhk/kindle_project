@@ -21,3 +21,7 @@ You might run into issues with `screen` during setup. If so, try the following.
 sudo /etc/init.d/screen-cleanup start
 ./setup.sh
 ```
+
+## Slides
+
+You can see the slides for this project at this link: https://docs.google.com/presentation/d/1rwL_yJcdZnlBZjpljL5R7RQgMPV0eXpDRMn6fmgbjCY/edit?usp=sharing
