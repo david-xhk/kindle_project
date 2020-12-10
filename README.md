@@ -1,4 +1,4 @@
-# kindle_project
+# Kindle eBooks
 
 ## Getting started
 
@@ -13,3 +13,11 @@ Here's what you need to do to get all the servers started.
 4. Once `./setup.sh` finishes running, you may start the analytics by running `./run_analytics.sh`.
 
 5. You can shut down all servers by running `./teardown.sh`.
+
+You might run into issues with `screen` during setup. If so, try the following.
+
+```bash
+./teardown.sh
+sudo /etc/init.d/screen-cleanup start
+./setup.sh
+```
